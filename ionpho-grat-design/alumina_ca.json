@@ -1,0 +1,15 @@
+{
+  "process_name": "Alumina_Ca",
+  "material_name": "Alumina",
+  "csv_file": "alumina.csv",
+  "layer_stack": {
+    "toxt": 3.0,
+    "boxt": 3.0,
+    "wght": 0.0,
+    "wghb": 0.14,
+    "inth": 0.0,
+    "tair": 1.0,
+    "tSi": 1.0,
+    "is_single_waveguide": true
+  }
+} 

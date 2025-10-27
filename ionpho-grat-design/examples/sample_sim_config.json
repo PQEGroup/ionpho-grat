@@ -1,0 +1,21 @@
+{
+  "wavelength": 0.397,
+  "material": "Alumina",
+  "material_index": 1.67,
+  "oxide_index": 1.47,
+  "si_index": 4.5,
+  
+  "wg_height": 0.14,
+  "wg_width": 0.5,
+  
+  "l_pre": 5.0,
+  "l_post": 5.0,
+  
+  "boundary_type": "PML",
+  
+  "grid_resolution": 0.01,
+  "run_time": 1e-12,
+  
+  "fwidth": 0.1,
+  "num_freqs": 1
+} 

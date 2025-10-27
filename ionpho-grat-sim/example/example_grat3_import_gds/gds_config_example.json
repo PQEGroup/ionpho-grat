@@ -1,0 +1,12 @@
+{
+    "gds_layer": 21,
+    "gds_dtype": 0,
+    "cell_name": "2018_03_16_854_866_wgwi0_55",
+    
+    "thetaIncDegrees": 50,
+    "wg_width": 0.55,
+    "wavelength": 0.866,
+    
+    "top_layer": null,
+    "top_dtype": null
+} 

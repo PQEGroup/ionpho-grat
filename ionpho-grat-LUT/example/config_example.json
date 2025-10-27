@@ -1,0 +1,50 @@
+{
+  "simulation": {
+    "material": "Alumina",
+    "material_file": "example/alumina_ca.json",
+    "process_name": "Alumina_CA",
+    "output_dir": null,
+    "include_2d_monitor": false,
+    "period": {
+      "min": 0.5,
+      "max": 0.6,
+      "steps": 21
+    },
+    "gratDC": {
+      "min": 0.4,
+      "max": 0.6,
+      "steps": 11
+    },
+    "material_config": {
+      "oxide_source": "fixed_index",
+      "oxide_index": 1.459,
+      "oxide_csv_file": null,
+      "max_num_poles": 1
+    },
+    "boundary_conditions": {
+      "use_pml": true,
+      "absorber_layers": 60,
+      "use_pec_bottom": true
+    },
+    "simulation_params": {
+      "l_pre": 5.0,
+      "l_post": 5.0,
+      "run_time": 0.55e-12,
+      "N": 60,
+      "grid_dl": 0.012,
+      "addl_str": "",
+      "wavelengths": [0.375,0.397,0.422]
+    },
+    "execution": {
+      "sequential": false,
+      "max_workers": 16,
+      "plot_first": true
+    }
+  },
+  "post_processing": {
+    "show_plots": false,
+    "plot_results": true,
+    "metric": "up_vs_input",
+    "wavelength": null
+  }
+} 
