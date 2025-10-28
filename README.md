@@ -23,17 +23,18 @@ Modular grating design framework that uses LUTs to create optimized beam-forming
 - Transverse design for curved grating teeth
 - Optional 2D Tidy3D validation simulations
 - JSON-based configuration
-- MATLAB file export for fabrication
+- MATLAB file export for simulation
 
 ### ionpho-grat-sim
 Full 3D electromagnetic simulation suite for validating complete grating designs. Supports GDS file import and provides comprehensive far-field analysis.
 
 **Key Features:**
 - Full 3D Tidy3D simulations
-- GDS and MATLAB file import
+- GDS or MATLAB file import
 - Single and dual-layer grating support
 - Far-field radiation pattern analysis
 - Configurable substrates (Si or metal)
+- Exports final GDS file
 
 ## Quick Start
 
