@@ -143,7 +143,8 @@ def process_mat_file(mat_file_path, config_file, run_sim=False, material_file=No
     )
     
     # Create taper(s)
-    wg_width = 0.5 # Waveguide width in um
+    sim_config = load_simulation_config(config_file)
+    wg_width = sim_config["simulation"]["wg_width"]  # Waveguide width in um
     wg_end = gratl + tapl_SI + 1  # End position with some margin
     
     if dual_layer:

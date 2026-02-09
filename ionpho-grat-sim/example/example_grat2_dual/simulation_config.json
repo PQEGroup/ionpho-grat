@@ -3,7 +3,9 @@
     "dl": 0.019,
     "simulation_time": 0.45e-12,
     "bottom_boundary": "PEC",
-    "comments": "Set bottom_boundary to 'PEC' for metal substrate or 'PML' for silicon substrate"
+    "wg_end_margin": 3,
+    "wg_width": 0.5,
+    "comments": "Set bottom_boundary to 'PEC' for metal substrate or 'PML' for silicon substrate. wg_end_margin is extra margin along x (um). wg_width is waveguide width in um."
   },
   "far_field": {
     "angle_proj_distances": [50, 100, 1000, 100000],

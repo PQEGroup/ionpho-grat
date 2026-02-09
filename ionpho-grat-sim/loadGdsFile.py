@@ -87,8 +87,15 @@ def process_gds_file(gds_file_path, config_file, run_sim=False, material_file=No
     
     # Get grating parameters from GDS config
     theta_inc_degrees = gds_config.get('thetaIncDegrees')  # Emission angle in degrees
-    wg_width = gds_config.get('wg_width')  # Waveguide width in um
     wavelength = gds_config.get('wavelength')  # Wavelength in um
+    
+    # Check wg_width consistency between configs
+    wg_width_sim = sim_config["simulation"]["wg_width"]
+    wg_width_gds = gds_config.get('wg_width')
+    if wg_width_sim != wg_width_gds:
+        print(f"ERROR: wg_width mismatch - simulation_config has {wg_width_sim}, gds_config has {wg_width_gds}")
+        return None
+    wg_width = wg_width_sim
     
     # Load the appropriate cell
     if cell_name:

@@ -82,7 +82,8 @@ def setup_simulation(p, mat, grating_etches, taper_structures, dual_layer=False,
     gratl = mat.get("lgrat")
     wg_width = p.get('wg_width', 0.5)
     wg_start = -2  # Start position of waveguide (um)
-    wg_end = gratl + tapl_SI + 3  # End position with some margin
+    wg_end_margin = config["simulation"]["wg_end_margin"]  # Extra margin along x (um)
+    wg_end = gratl + tapl_SI + wg_end_margin  # End position with margin
     
     # Box for oxide layers
     pre_tap_length = 5
