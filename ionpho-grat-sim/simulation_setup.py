@@ -23,7 +23,7 @@ def load_simulation_config(config_file=None):
     except Exception as e:
         raise ValueError(f"Failed to load configuration file: {e}")
 
-def setup_simulation(p, mat, grating_etches, taper_structures, dual_layer=False, wgh_low=None, wgh_high=None, inth=None, material_data=None, config_file=None, gds_structures=[]):
+def setup_simulation(p, mat, grating_etches, taper_structures, dual_layer=False, wgh_low=None, wgh_high=None, inth=None, material_data=None, config_file=None, gds_structures=[], pec_layer_config=None):
     """Set up the Tidy3D simulation with the grating structures."""
     # Load configuration
     config = load_simulation_config(config_file)
@@ -96,6 +96,47 @@ def setup_simulation(p, mat, grating_etches, taper_structures, dual_layer=False,
     # Create structures list
     structures = []
     structures.append(td.Structure(geometry=oxide_box, medium=ox))
+    
+    # Add PEC layer with cutout if config is provided and enabled
+    if pec_layer_config and pec_layer_config.get('enabled', False):
+        pec_center_x = pec_layer_config.get('centerX', 0)
+        pec_center_y = pec_layer_config.get('centerY', 0)
+        pec_width = pec_layer_config.get('width', 10)
+        pec_length = pec_layer_config.get('length', 10)
+        pec_thickness = pec_layer_config.get('thickness', 0.2)
+        
+        # Outer boundary edges
+        outer_margin = 5
+        x_min = wg_start - pre_tap_length - outer_margin
+        x_max = wg_end + pre_tap_length + outer_margin
+        y_min = -max_y - 2 - pre_tap_length - outer_margin
+        y_max = max_y + 2 + pre_tap_length + outer_margin
+        
+        # Cutout edges
+        half_width = pec_width / 2
+        half_length = pec_length / 2
+        cut_x_min = pec_center_x - half_length
+        cut_x_max = pec_center_x + half_length
+        cut_y_min = pec_center_y - half_width
+        cut_y_max = pec_center_y + half_width
+        
+        z_min = toxt - pec_thickness
+        z_max = toxt 
+        
+        # Create 4 boxes around the cutout
+        # Left box: from x_min to cut_x_min, full Y
+        pec_left = td.Box.from_bounds(rmin=(x_min, y_min, z_min), rmax=(cut_x_min, y_max, z_max))
+        # Right box: from cut_x_max to x_max, full Y
+        pec_right = td.Box.from_bounds(rmin=(cut_x_max, y_min, z_min), rmax=(x_max, y_max, z_max))
+        # Bottom box: between cutout X edges, from y_min to cut_y_min
+        pec_bottom = td.Box.from_bounds(rmin=(cut_x_min, y_min, z_min), rmax=(cut_x_max, cut_y_min, z_max))
+        # Top box: between cutout X edges, from cut_y_max to y_max
+        pec_top = td.Box.from_bounds(rmin=(cut_x_min, cut_y_max, z_min), rmax=(cut_x_max, y_max, z_max))
+        
+        for pec_box in [pec_left, pec_right, pec_bottom, pec_top]:
+            structures.append(td.Structure(geometry=pec_box, medium=td.PECMedium()))
+        
+        print(f"Added PEC layer at z={toxt} with thickness={pec_thickness}, cutout at ({pec_center_x}, {pec_center_y}) size {pec_width}x{pec_length}")
     
     # Add silicon substrate or set PEC boundary based on substrate_type
     if substrate_type.lower() == "si":

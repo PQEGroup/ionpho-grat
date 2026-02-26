@@ -223,6 +223,9 @@ def process_gds_file(gds_file_path, config_file, run_sim=False, material_file=No
     # Extract the geometries from the structures for setup_simulation
     gds_geometries = [s.geometry for s in tidy3d_structures]
     
+    # Get PEC layer config if present
+    pec_layer_config = gds_config.get('pec_layer')
+    
     # Use the existing setup_simulation function with our GDS-based geometries
     sim = setup_simulation(
         p, mat, [], [],  # Empty list for tapers as they are included in GDS
@@ -232,7 +235,8 @@ def process_gds_file(gds_file_path, config_file, run_sim=False, material_file=No
         inth=inth,
         material_data=material_data,
         config_file=config_file,
-        gds_structures=tidy3d_structures
+        gds_structures=tidy3d_structures,
+        pec_layer_config=pec_layer_config
     )
     
     # Add mode source
