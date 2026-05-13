@@ -87,8 +87,15 @@ def process_gds_file(gds_file_path, config_file, run_sim=False, material_file=No
     
     # Get grating parameters from GDS config
     theta_inc_degrees = gds_config.get('thetaIncDegrees')  # Emission angle in degrees
-    wg_width = gds_config.get('wg_width')  # Waveguide width in um
     wavelength = gds_config.get('wavelength')  # Wavelength in um
+    
+    # Check wg_width consistency between configs
+    wg_width_sim = sim_config["simulation"]["wg_width"]
+    wg_width_gds = gds_config.get('wg_width')
+    if wg_width_sim != wg_width_gds:
+        print(f"ERROR: wg_width mismatch - simulation_config has {wg_width_sim}, gds_config has {wg_width_gds}")
+        return None
+    wg_width = wg_width_sim
     
     # Load the appropriate cell
     if cell_name:
@@ -216,6 +223,9 @@ def process_gds_file(gds_file_path, config_file, run_sim=False, material_file=No
     # Extract the geometries from the structures for setup_simulation
     gds_geometries = [s.geometry for s in tidy3d_structures]
     
+    # Get PEC layer config if present
+    pec_layer_config = gds_config.get('pec_layer')
+    
     # Use the existing setup_simulation function with our GDS-based geometries
     sim = setup_simulation(
         p, mat, [], [],  # Empty list for tapers as they are included in GDS
@@ -225,7 +235,8 @@ def process_gds_file(gds_file_path, config_file, run_sim=False, material_file=No
         inth=inth,
         material_data=material_data,
         config_file=config_file,
-        gds_structures=tidy3d_structures
+        gds_structures=tidy3d_structures,
+        pec_layer_config=pec_layer_config
     )
     
     # Add mode source

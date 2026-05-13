@@ -8,6 +8,7 @@ import re
 from matplotlib.animation import FuncAnimation
 from PIL import Image
 import io
+from scipy.optimize import curve_fit
 
 def plot_radiation_efficiency(sim_data, sim_data_file, output_dir=None, show_plots=True, save_plots=False):
     """Plot radiation efficiency metrics from flux monitors.
@@ -304,6 +305,7 @@ def plot_farfield_data(sim_data_file, output_dir=None, show_plots=True, save_plo
             # Create intensity plot
             # Transpose the intensity data to match the flipped coordinate order
             intensity_plot = data['intensity'].squeeze().T
+            intensity_plot = intensity_plot / np.max(intensity_plot)
             im = ax.pcolormesh(
                 data['x_vals'], data['y_vals'], 
                 intensity_plot, 
@@ -320,6 +322,38 @@ def plot_farfield_data(sim_data_file, output_dir=None, show_plots=True, save_plo
             
             # Add colorbar to each subplot
             plt.colorbar(im, ax=ax, label='Intensity (a.u.)')
+            
+            # Fit 2D Gaussian to extract beam waists
+            def gaussian_2d(coords, A, x0, y0, wx, wy, offset):
+                x, y = coords
+                return A * np.exp(-2 * ((x - x0)**2 / wx**2 + (y - y0)**2 / wy**2)) + offset
+            
+            X, Y = np.meshgrid(data['x_vals'], data['y_vals'])
+            flat_coords = np.vstack([X.ravel(), Y.ravel()])
+            flat_intensity = intensity_plot.ravel()
+            
+            peak_idx = np.argmax(flat_intensity)
+            x0_guess = flat_coords[0, peak_idx]
+            y0_guess = flat_coords[1, peak_idx]
+            p0 = [1.0, x0_guess, y0_guess, 
+                  (data['x_vals'][-1] - data['x_vals'][0]) / 4,
+                  (data['y_vals'][-1] - data['y_vals'][0]) / 4, 0.0]
+            
+            try:
+                popt, _ = curve_fit(gaussian_2d, flat_coords, flat_intensity, p0=p0,
+                                    bounds=([0, data['x_vals'][0], data['y_vals'][0], 0, 0, -np.inf],
+                                            [np.inf, data['x_vals'][-1], data['y_vals'][-1], np.inf, np.inf, np.inf]))
+                A_fit, x0_fit, y0_fit, wx_fit, wy_fit, offset_fit = popt
+                print(f"  {data['monitor_name']}: beam waist wx = {wx_fit:.2f} μm, wy = {wy_fit:.2f} μm "
+                      f"(center: x0={x0_fit:.2f}, y0={y0_fit:.2f})")
+                
+                # Overlay 1/e^2 contour on the plot
+                fit_2d = gaussian_2d(flat_coords, *popt).reshape(X.shape)
+                #ax.contour(X, Y, fit_2d, levels=[A_fit * np.exp(-2) + offset_fit],
+                #           colors='cyan', linewidths=1.5, linestyles='--')
+                ax.set_title(f"Far Field - {size_text} window\n$w_x$={wx_fit:.2f}μm, $w_y$={wy_fit:.2f}μm")
+            except RuntimeError:
+                print(f"  {data['monitor_name']}: Gaussian fit did not converge")
         
         # Add a common title
         plt.suptitle(f"Far Field Intensity at Different Window Sizes - λ = {wavelength*1e3:.1f} nm", fontsize=16)
@@ -441,22 +475,22 @@ def plot_farfield_data(sim_data_file, output_dir=None, show_plots=True, save_plo
 
             print(f"Monitor {data['monitor_name']} - Intensity shape: {int_shape}, x_vals: {x_len}, z_vals: {z_len}")
             
+            intensity_norm = data['intensity'] / np.max(data['intensity'])
+
             # Choose how to plot based on dimensions
             if int_shape[0] == x_len and int_shape[1] == z_len:
-                # Dimensions match, no need to transpose
                 im = ax.pcolormesh(
                     data['x_vals'], 
                     data['z_vals'], 
-                    data['intensity'].T, 
+                    intensity_norm.T, 
                     shading='auto', 
                     cmap='inferno'
                 )
             else:
-                # Try transposing
                 im = ax.pcolormesh(
                     data['x_vals'], 
                     data['z_vals'], 
-                    data['intensity'].T, 
+                    intensity_norm.T, 
                     shading='auto', 
                     cmap='inferno'
                 )
