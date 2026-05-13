@@ -1,0 +1,27 @@
+{
+  "process_name": "LL_SL2",
+  "material_name": "Al2O3_LL",
+  "csv_file": "Al2O3_LL.csv",
+  "layer_stack": {
+    "toxt": 5.81,
+    "boxt": 5.38,
+    "wght": 0.0,
+    "wghb": 0.1,
+    "inth": 0.0,
+    "tair": 1.0,
+    "tSi": 1.0,
+    "is_single_waveguide": true
+  },
+  "wavelength_properties": {
+    "397": {
+      "si_index": 4.485,
+      "ox_index": 1.4757,
+      "wg_index": 1.6754
+    },
+    "422": {
+      "si_index": 4.47,
+      "ox_index": 1.473,
+      "wg_index": 1.672
+    }
+  }
+} 

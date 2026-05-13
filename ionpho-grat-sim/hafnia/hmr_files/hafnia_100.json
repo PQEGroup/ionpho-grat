@@ -1,0 +1,22 @@
+{
+  "process_name": "Hafnia_100nm",
+  "material_name": "Hafnia_100nm",
+  "csv_file": "Hafnia_100nm.csv",
+  "layer_stack": {
+    "toxt": 1.5,
+    "boxt": 3.0,
+    "wght": 0.0,
+    "wghb": 0.1,
+    "inth": 0.0,
+    "tair": 1.0,
+    "tSi": 1.0,
+    "is_single_waveguide": true
+  },
+  "wavelength_properties": {
+    "397": {
+      "si_index": 5.485,
+      "ox_index": 1.47,
+      "wg_index": 2.001
+    }
+  }
+} 

@@ -1,0 +1,29 @@
+{
+  "simulation": {
+    "dl": 0.015,
+    "simulation_time": 0.45e-12,
+    "bottom_boundary": "PML",
+    "wg_end_margin": 6,
+    "wg_width": 0.45,
+    "comments": "Set bottom_boundary to 'PEC' for metal substrate or 'PML' for silicon substrate. wg_end_margin is extra margin along x (um). wg_width is waveguide width in um."
+  },
+  "far_field": {
+    "angle_proj_distances": [50, 100, 1000, 100000],
+    "xy_monitor": {
+      "num_points": 101,
+      "num_z_heights": 21,
+      "z_min": 25,
+      "z_max": 75
+    },
+    "xz_monitor": {
+      "num_points": 101,
+      "z_min": 25,
+      "z_max": 75
+    },
+    "comments": "Configuration for far field monitors"
+  },
+  "ion_trap": {
+    "z_height": 50.0,
+    "comments": "Target ion z-height in um, used as the primary far field monitor height"
+  }
+} 

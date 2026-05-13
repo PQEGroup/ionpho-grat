@@ -1,0 +1,21 @@
+{
+    "gds_layer": 40,
+    "gds_dtype": 0,
+    "cell_name": "gratingCoupler_397_HfAl2O3_m20deg_w0x1p1_w0y1p1_z028p5_tapStartm23p5542_clipBeg0p85_clipEnd1p52__oscar_397_20degs_wgw0p3_tapangAdd0_fullPerDC_mesh_acc_3_boxt3_toxt1p5",
+    
+    "thetaIncDegrees": -20,
+    "wg_width": 0.3,
+    "wavelength": 0.397,
+    
+    "top_layer": null,
+    "top_dtype": null,
+    
+    "pec_layer": {
+        "enabled": false,
+        "centerX": 15.62,
+        "centerY": 0.0,
+        "width": 30.57,
+        "length": 17.2,
+        "thickness": 0.9
+    }
+} 
